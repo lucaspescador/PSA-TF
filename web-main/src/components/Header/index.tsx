@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { ExitToApp, MenuSharp as MenuIcon, History } from '@mui/icons-material';
+import {
+  ExitToApp,
+  MenuSharp as MenuIcon,
+  History,
+  Login,
+} from '@mui/icons-material';
 
 import {
   AppBar,
@@ -12,12 +17,15 @@ import {
   Avatar,
   Typography,
   Container,
+  Button,
 } from '@mui/material';
 
 import useStyles from './styles';
 import logo from '../../assets/img/logo.jpeg';
+import { useAuth } from '../../hooks/Auth';
 
 const Header: React.FC = () => {
+  const { name, signOut } = useAuth();
   const classes = useStyles();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -65,7 +73,7 @@ const Header: React.FC = () => {
 
       <MenuItem
         onClick={() => {
-          console.log('sair');
+          signOut();
         }}
         className={classes.root}
       >
@@ -111,45 +119,53 @@ const Header: React.FC = () => {
           <Toolbar>
             <img src={logo} alt="logo ceapia" className={classes.logo} />
 
-            <Typography component="h1" variant="h5">
+            <Typography
+              component="h1"
+              variant="h5"
+              className={classes.title}
+              onClick={() => navigate('/')}
+            >
               Matrículas PSA 2022
             </Typography>
 
             <div className={classes.grow} />
 
-            {/* <Typography className={classes.sectionDesktop}>
-              Olá, Marcus Macedo
-            </Typography> */}
+            {name ? (
+              <>
+                <Typography className={classes.sectionDesktop}>
+                  {`Olá, ${name}`}
+                </Typography>
 
-            <div className={classes.sectionDesktop}>
-              <IconButton
-                onClick={handleProfileMenuOpen}
-                color="primary"
-                size="large"
+                <div className={classes.sectionDesktop}>
+                  <IconButton
+                    onClick={handleProfileMenuOpen}
+                    color="primary"
+                    size="large"
+                  >
+                    {name && (
+                      <Avatar className={classes.avatar}>
+                        {name.split('')[0].toUpperCase()}
+                      </Avatar>
+                    )}
+                  </IconButton>
+                </div>
+
+                <div className={classes.sectionMobile}>
+                  <IconButton onClick={handleMobileMenuOpen} color="primary">
+                    <MenuIcon className={classes.icon} />
+                  </IconButton>
+                </div>
+              </>
+            ) : (
+              <Button
+                variant="contained"
+                endIcon={<Login />}
+                className={classes.button}
+                onClick={() => navigate('/login')}
               >
-                {/* {initialized && (
-                  <Avatar className={classes.avatar}>
-                    {
-                      // @ts-ignore
-                      keycloak?.idTokenParsed?.preferred_username
-                        .split('')[0]
-                        .toUpperCase()
-                    }
-                  </Avatar>
-                )} */}
-                <Avatar
-                  className={classes.avatar}
-                  sx={{ height: 70, width: 70 }}
-                >
-                  M
-                </Avatar>
-              </IconButton>
-            </div>
-            <div className={classes.sectionMobile}>
-              <IconButton onClick={handleMobileMenuOpen} color="primary">
-                <MenuIcon className={classes.icon} />
-              </IconButton>
-            </div>
+                Entrar
+              </Button>
+            )}
           </Toolbar>
         </Container>
       </AppBar>

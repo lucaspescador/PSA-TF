@@ -8,6 +8,7 @@ export default makeStyles((theme: Theme) => ({
   },
   grow: {
     flexGrow: 1,
+    marginBottom: theme.spacing(2),
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -25,18 +26,29 @@ export default makeStyles((theme: Theme) => ({
     },
   },
   logo: {
-    margin: theme.spacing(1),
+    padding: theme.spacing(1),
     width: '8%',
+    '&:hover': {
+      cursor: 'pointer',
+    },
+  },
+  title: {
+    '&:hover': {
+      cursor: 'pointer',
+    },
   },
   icon: {
     background: 'white',
   },
   avatar: {
-    backgroundColor: 'green',
+    backgroundColor: `${theme.palette.primary.light} !important`,
   },
   link: {
     color: 'inherit',
     textDecoration: 'inherit',
     width: 'auto',
+  },
+  button: {
+    background: `${theme.palette.primary.light} !important`,
   },
 }));

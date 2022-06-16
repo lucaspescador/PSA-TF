@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Backdrop,
   Button,
@@ -13,13 +13,19 @@ import {
   Typography,
 } from '@mui/material';
 
+import { Check, Login } from '@mui/icons-material';
 import useStyles from './styles';
 import { Turma } from '../../models/class';
+import { Historico } from '../../models/history';
 import api from '../../services/api';
+import { useAuth } from '../../hooks/Auth';
+import { getStatusButton } from '../../utils/buttons';
 
 const Home: React.FC = () => {
   const classes = useStyles();
+  const { token } = useAuth();
   const [turmas, setTurmas] = useState<Turma[]>([]);
+  const [historico, setHistorico] = useState<Historico[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     nome: '',
@@ -48,6 +54,27 @@ const Home: React.FC = () => {
     });
   };
 
+  const renderActionButtons = useCallback(
+    (turma: Turma) => {
+      if (!token || !historico) {
+        return (
+          <Button startIcon={<Login />} variant="contained" disabled>
+            Entre para se matricular
+          </Button>
+        );
+      }
+
+      const historicoIdx = historico.findIndex((h) => h.turma.id === turma.id);
+
+      if (historicoIdx > -1) {
+        return getStatusButton(historico[historicoIdx].status);
+      }
+
+      return <Button variant="contained">Matricular-se</Button>;
+    },
+    [token, historico],
+  );
+
   useEffect(() => {
     setLoading(true);
 
@@ -57,6 +84,15 @@ const Home: React.FC = () => {
           params: filters,
         });
         setTurmas(response.data);
+
+        if (token) {
+          const historyResponse = await api.get('/historico/me', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setHistorico(historyResponse.data);
+        }
       } catch (error) {
         console.log(error);
       } finally {
@@ -65,11 +101,16 @@ const Home: React.FC = () => {
     }
 
     getTurmas();
-  }, [filters]);
+  }, [filters, token]);
 
   return (
     <>
-      <Typography variant="h4" component="h1" className={classes.title}>
+      <Typography
+        variant="h4"
+        component="h1"
+        className={classes.title}
+        align="center"
+      >
         TURMAS
       </Typography>
 
@@ -125,6 +166,10 @@ const Home: React.FC = () => {
         />
       </Stack>
 
+      <div className={classes.divider}>
+        <Divider />
+      </div>
+
       {!loading && turmas.length === 0 && (
         <Typography variant="h6" align="center" color="text.secondary">
           <b>Nenhum resultado encontrado :(</b>
@@ -168,7 +213,7 @@ const Home: React.FC = () => {
               </CardContent>
 
               <CardActions style={{ justifyContent: 'center' }}>
-                <Button variant="contained">Matricular-se</Button>
+                {renderActionButtons(item)}
               </CardActions>
             </Card>
           ))}

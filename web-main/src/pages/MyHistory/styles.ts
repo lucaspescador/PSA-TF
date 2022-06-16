@@ -6,6 +6,8 @@ export default makeStyles((theme: Theme) => ({
     padding: theme.spacing(2, 0),
     color: theme.palette.primary.light,
     fontWeight: 'bolder',
-    borderBottom: `0.5px solid ${theme.palette.primary.dark}`,
+  },
+  divider: {
+    padding: theme.spacing(2, 0),
   },
 }));

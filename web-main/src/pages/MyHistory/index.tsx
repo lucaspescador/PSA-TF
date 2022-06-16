@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Backdrop,
   CircularProgress,
+  Divider,
   Paper,
   Table,
   TableBody,
@@ -18,9 +19,13 @@ import useStyles from './styles';
 
 import api from '../../services/api';
 import { Historico } from '../../models/history';
+import { useAuth } from '../../hooks/Auth';
+import { getStatusChip } from '../../utils/status';
 
 const MyHistory: React.FC = () => {
   const classes = useStyles();
+  const { token } = useAuth();
+
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(true);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -38,11 +43,13 @@ const MyHistory: React.FC = () => {
   };
 
   useEffect(() => {
-    setLoading(true);
-
     async function getMyHistory() {
       try {
-        const response = await api.get('/historico/me/1');
+        const response = await api.get('/historico/me', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setHistoricos(response.data);
       } catch (error) {
         console.log(error);
@@ -56,9 +63,18 @@ const MyHistory: React.FC = () => {
 
   return (
     <>
-      <Typography variant="h4" component="h1" className={classes.title}>
+      <Typography
+        variant="h4"
+        component="h1"
+        className={classes.title}
+        align="center"
+      >
         MEU HISTÓRICO
       </Typography>
+
+      <div className={classes.divider}>
+        <Divider />
+      </div>
 
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -102,7 +118,12 @@ const MyHistory: React.FC = () => {
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => {
                     return (
-                      <TableRow hover role="checkbox" tabIndex={-1}>
+                      <TableRow
+                        hover
+                        key={row.id}
+                        role="checkbox"
+                        tabIndex={-1}
+                      >
                         <TableCell key={`${row.id}-disciplina`}>
                           {row.turma.disciplina.nome}
                         </TableCell>
@@ -119,7 +140,7 @@ const MyHistory: React.FC = () => {
                           {`${row.turma.ano}/${row.turma.semestre}`}
                         </TableCell>
                         <TableCell key={`${row.id}-status`}>
-                          {row.status}
+                          {getStatusChip(row.status)}
                         </TableCell>
                         <TableCell key={`${row.id}-nota`}>
                           {row.nota || '--'}
