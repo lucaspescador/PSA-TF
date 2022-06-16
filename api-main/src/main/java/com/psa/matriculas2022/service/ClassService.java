@@ -19,4 +19,12 @@ public class ClassService {
         return (List<Turma>) Optional.of(classesRepository.findAll())
                 .orElse(Collections.emptyList());
     }
+
+    public Optional<Turma> findById(Integer id) {
+        return classesRepository.findById(id);
+    }
+
+    public Turma save(Turma turma) {
+        return classesRepository.save(turma);
+    }
 }

@@ -1,5 +1,6 @@
 package com.psa.matriculas2022.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.psa.matriculas2022.constants.UserRoles;
 
@@ -28,6 +29,10 @@ public class Usuario {
 
     @NonNull
     private String email;
+
+    @NonNull
+    @JsonIgnore
+    private String senha;
 
     @NonNull
     @Enumerated(EnumType.STRING)

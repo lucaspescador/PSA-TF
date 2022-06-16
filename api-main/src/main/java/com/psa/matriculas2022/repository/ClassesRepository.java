@@ -5,4 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ClassesRepository extends CrudRepository<Turma, Integer> {}
+public interface ClassesRepository extends CrudRepository<Turma, Integer> {
+}

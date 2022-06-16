@@ -18,6 +18,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
