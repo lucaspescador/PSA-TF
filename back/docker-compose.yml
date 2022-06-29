@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+ mysql:
+   image: mysql:8.0
+   platform: linux/amd64
+   container_name: matriculas_mysql
+   restart: always
+   tty: true
+   volumes:
+     - ./mysqldata:/var/lib/mysql
+   environment:
+     MYSQL_ROOT_PASSWORD: root
+     MYSQL_DATABASE: matriculas
+     MYSQL_USER: admin
+     MYSQL_PASSWORD: pass
+   ports:
+     - 3307:3306
+   command: mysqld --lower_case_table_names=1
