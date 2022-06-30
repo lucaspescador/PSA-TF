@@ -5,10 +5,10 @@ Bruno Bueno, Lucas Camargo e Victória Tortelli
 
 https://psa-2022.herokuapp.com/
 
-Aluno
-Login: Aluno Teste
+Aluno<br/>
+Login: Aluno Teste<br/>
 Senha: alex123
 
-Coordenador
-Login: Coordenador Teste
+Coordenador<br/>
+Login: Coordenador Teste<br/>
 Senha: alex123
